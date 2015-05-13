@@ -1,6 +1,6 @@
 {
-  "name": "angular-rangeslider",
-  "version": "0.0.13",
+  "name": "tenzen-ionic-rangeslider",
+  "version": "tz-0.0.1",
   "main": [
     "./angular.rangeSlider.js",
     "./angular.rangeSlider.css"

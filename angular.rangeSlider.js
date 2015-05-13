@@ -1,19 +1,19 @@
 /*
- *  Angular RangeSlider Directive
+ *  Tenzen Ionic RangeSlider Directive
  * 
- *  Version: 0.0.13
+ *  Version: tz-0.0.1
  *
- *  Author: Daniel Crisp, danielcrisp.com
+ *  Author: Rodrigo Sliachticas, https://github.com/lastikas
  *
- *  The rangeSlider has been styled to match the default styling
- *  of form elements styled using Twitter's Bootstrap
+ *  The tzRangeSlider has been styled to match the default styling
+ *  of Ionic Framework's range input
  *
- *  Originally forked from https://github.com/leongersen/noUiSlider
+ *  Originally forked from https://github.com/danielcrisp
  *
 
     This code is released under the MIT Licence - http://opensource.org/licenses/MIT
 
-    Copyright (c) 2013 Daniel Crisp
+    Copyright (c) 2015 LUA.NET
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,6 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
-
 */
 
 (function() {
@@ -46,8 +45,10 @@
      * Touch friendly.
      * @directive
      */
-    angular.module('ui-rangeSlider', [])
-        .directive('rangeSlider', ['$document', '$filter', '$log', function($document, $filter, $log) {
+    angular.module('tenzen-ionic-rangeSlider', [])
+        .directive('tzRangeSlider', ['$document', '$log', '$ionicSideMenuDelegate', '$ionicScrollDelegate', function($document, $log, $ionicSideMenuDelegate, $ionicScrollDelegate) {
+
+        	var CAN_DRAG_ION_SIDE_MENU = $ionicSideMenuDelegate.canDragContent();
 
             // test for mouse, pointer or touch
             var eventNamespace = '.rangeSlider',
@@ -101,7 +102,6 @@
                 },
 
                 restrict = function(value) {
-
                     // normalize so it can't move out of bounds
                     return (value < 0 ? 0 : (value > 100 ? 100 : value));
 
@@ -123,8 +123,6 @@
                     orientation: '@', // options: horizontal | vertical | vertical left | vertical right
                     step: '@',
                     decimalPlaces: '@',
-                    filter: '@',
-                    filterOptions: '@',
                     showValues: '@',
                     pinHandle: '@',
                     preventEqualMinMax: '@',
@@ -138,14 +136,6 @@
                 scopeOptions.modelMax = '=';
             }
 
-            // if (EVENT < 4) {
-            //     // some sort of touch has been detected
-            //     angular.element('html').addClass('ngrs-touch');
-            // } else {
-            //     angular.element('html').addClass('ngrs-no-touch');
-            // }
-
-
             return {
                 restrict: 'A',
                 replace: true,
@@ -154,10 +144,6 @@
                     '<div class="ngrs-handle ngrs-handle-min"><i></i></div>',
                     '<div class="ngrs-handle ngrs-handle-max"><i></i></div>',
                     '<div class="ngrs-join"></div>',
-                    '</div>',
-                    '<div class="ngrs-value-runner">',
-                    '<div class="ngrs-value ngrs-value-min" ng-show="showValues"><div>{{filteredModelMin}}</div></div>',
-                    '<div class="ngrs-value ngrs-value-max" ng-show="showValues"><div>{{filteredModelMax}}</div></div>',
                     '</div>',
                     '</div>'
                 ].join(''),
@@ -178,10 +164,6 @@
                         allowedRange = [0, 0],
                         range = 0,
                         down = false;
-
-                    // filtered
-                    scope.filteredModelMin = scope.modelMin;
-                    scope.filteredModelMax = scope.modelMax;
 
                     /**
                      *  FALL BACK TO DEFAULTS FOR SOME ATTRIBUTES
@@ -388,38 +370,6 @@
                             scope.modelMin = Math.max(scope.min, scope.modelMin);
                             scope.modelMax = Math.min(scope.max, scope.modelMax);
 
-                            if (scope.filter && scope.filterOptions) {
-                                scope.filteredModelMin = $filter(scope.filter)(scope.modelMin, scope.filterOptions);
-                                scope.filteredModelMax = $filter(scope.filter)(scope.modelMax, scope.filterOptions);
-                            } else if (scope.filter) {
-
-                                var filterTokens = scope.filter.split(':'),
-                                    filterName = scope.filter.split(':')[0],
-                                    filterOptions = filterTokens.slice().slice(1),
-                                    modelMinOptions,
-                                    modelMaxOptions;
-
-                                // properly parse string and number args
-                                filterOptions = filterOptions.map(function (arg) {
-                                    if (isNumber(arg)) {
-                                        return +arg;
-                                    } else if ((arg[0] == "\"" && arg[arg.length-1] == "\"") || (arg[0] == "\'" && arg[arg.length-1] == "\'")) {
-                                        return arg.slice(1, -1);
-                                    }
-                                });
-
-                                modelMinOptions = filterOptions.slice();
-                                modelMaxOptions = filterOptions.slice();
-                                modelMinOptions.unshift(scope.modelMin);
-                                modelMaxOptions.unshift(scope.modelMax);
-
-                                scope.filteredModelMin = $filter(filterName).apply(null, modelMinOptions);
-                                scope.filteredModelMax = $filter(filterName).apply(null, modelMaxOptions);
-                            } else {
-                                scope.filteredModelMin = scope.modelMin;
-                                scope.filteredModelMax = scope.modelMax;
-                            }
-
                             // check for no range
                             if (scope.min === scope.max && scope.modelMin == scope.modelMax) {
 
@@ -463,7 +413,6 @@
                     }
 
                     function handleMove(index) {
-
                         var $handle = handles[index];
 
                         // on mousedown / touchstart
@@ -502,6 +451,10 @@
 
                                 // listen for mousemove / touchmove document events
                                 $document.bind(moveEvent, function(e) {
+
+                                	$ionicSideMenuDelegate.canDragContent(false);
+                                	$ionicScrollDelegate.freezeScroll(true);
+
                                     // prevent default
                                     e.preventDefault();
 
@@ -586,6 +539,9 @@
                                     previousClick = currentClick;
 
                                 }).bind(offEvent, function() {
+
+                                	$ionicSideMenuDelegate.canDragContent(CAN_DRAG_ION_SIDE_MENU);
+                                	$ionicScrollDelegate.freezeScroll(false);
 
                                     if (angular.isFunction(scope.onHandleUp)) {
                                         scope.onHandleUp();
