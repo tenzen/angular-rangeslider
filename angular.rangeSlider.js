@@ -37,9 +37,6 @@
 (function() {
     'use strict';
 
-    // check if we need to support legacy angular
-    var legacySupport = (angular.version.major === 1 && angular.version.minor === 0);
-
     /**
      * RangeSlider, allows user to define a range of values using a slider
      * Touch friendly.
@@ -59,8 +56,7 @@
                     step: 0,
                     decimalPlaces: 0,
                     showValues: true,
-                    preventEqualMinMax: false,
-                    attachHandleValues: false
+                    preventEqualMinMax: false
                 },
 
                 // Determine the events to bind. IE11 implements pointerEvents without
@@ -120,21 +116,12 @@
                     modelMax: '=?',
                     onHandleDown: '&', // calls optional function when handle is grabbed
                     onHandleUp: '&', // calls optional function when handle is released
-                    orientation: '@', // options: horizontal | vertical | vertical left | vertical right
                     step: '@',
                     decimalPlaces: '@',
                     showValues: '@',
                     pinHandle: '@',
-                    preventEqualMinMax: '@',
-                    attachHandleValues: '@'
+                    preventEqualMinMax: '@'
                 };
-
-            if (legacySupport) {
-                // make optional properties required
-                scopeOptions.disabled = '=';
-                scopeOptions.modelMin = '=';
-                scopeOptions.modelMax = '=';
-            }
 
             return {
                 restrict: 'A',
@@ -175,31 +162,6 @@
                         }
 
                         scope.$watch('disabled', setDisabledStatus);
-                    });
-
-                    attrs.$observe('orientation', function(val) {
-                        if (!angular.isDefined(val)) {
-                            scope.orientation = defaults.orientation;
-                        }
-
-                        var classNames = scope.orientation.split(' '),
-                            useClass;
-
-                        for (var i = 0, l = classNames.length; i < l; i++) {
-                            classNames[i] = 'ngrs-' + classNames[i];
-                        }
-
-                        useClass = classNames.join(' ');
-
-                        // add class to element
-                        $slider.addClass(useClass);
-
-                        // update pos
-                        if (scope.orientation === 'vertical' || scope.orientation === 'vertical left' || scope.orientation === 'vertical right') {
-                            pos = 'top';
-                            posOpp = 'bottom';
-                            orientation = 1;
-                        }
                     });
 
                     attrs.$observe('step', function(val) {
@@ -251,22 +213,6 @@
                             }
                         }
                     });
-
-                    attrs.$observe('attachHandleValues', function(val) {
-                        if (!angular.isDefined(val)) {
-                            scope.attachHandleValues = defaults.attachHandleValues;
-                        } else {
-                            if (val === 'true' || val === '') {
-                                // flag as true
-                                scope.attachHandleValues = true;
-                                // add class to runner
-                                element.find('.ngrs-value-runner').addClass('ngrs-attached-handles');
-                            } else {
-                                scope.attachHandleValues = false;
-                            }
-                        }
-                    });
-
 
                     // listen for changes to values
                     scope.$watch('min', setMinMax);
@@ -361,11 +307,6 @@
                                 value1pos,
                                 value2pos;
 
-                            if (scope.attachHandleValues) {
-                                value1pos = handle1pos;
-                                value2pos = handle2pos;
-                            }
-
                             // make sure the model values are within the allowed range
                             scope.modelMin = Math.max(scope.min, scope.modelMin);
                             scope.modelMax = Math.min(scope.max, scope.modelMax);
@@ -377,11 +318,6 @@
                                 angular.element(handles[0]).css(pos, '0%');
                                 angular.element(handles[1]).css(pos, '100%');
 
-                                if (scope.attachHandleValues) {
-                                    // reposition values
-                                    angular.element(values[0]).css(pos, '0%');
-                                    angular.element(values[1]).css(pos, '100%');
-                                }
 
                                 // reposition join
                                 angular.element(join).css(pos, '0%').css(posOpp, '0%');
@@ -391,13 +327,6 @@
                                 // reposition handles
                                 angular.element(handles[0]).css(pos, handle1pos + '%');
                                 angular.element(handles[1]).css(pos, handle2pos + '%');
-
-                                if (scope.attachHandleValues) {
-                                    // reposition values
-                                    angular.element(values[0]).css(pos, value1pos + '%');
-                                    angular.element(values[1]).css(pos, value2pos + '%');
-                                    angular.element(values[1]).css(posOpp, 'auto');
-                                }
 
                                 // reposition join
                                 angular.element(join).css(pos, handle1pos + '%').css(posOpp, (100 - handle2pos) + '%');
