@@ -45,7 +45,10 @@
     angular.module('tenzen-ionic-rangeSlider', [])
         .directive('tzRangeSlider', ['$document', '$log', '$ionicSideMenuDelegate', '$ionicScrollDelegate', function($document, $log, $ionicSideMenuDelegate, $ionicScrollDelegate) {
 
-        	var CAN_DRAG_ION_SIDE_MENU = $ionicSideMenuDelegate.canDragContent();
+        	var CAN_DRAG_ION_SIDE_MENU = $ionicSideMenuDelegate.canDragContent(),
+                CLASS_NAME_DOWN = 'ngrs-down',
+                CLASS_NAME_OVER = 'ngrs-over',
+                CLASS_NAME_DISABLED = 'ngrs-disabled'
 
             // test for mouse, pointer or touch
             var eventNamespace = '.rangeSlider',
@@ -240,9 +243,9 @@
 
                     function setDisabledStatus(status) {
                         if (status) {
-                            $slider.addClass('ngrs-disabled');
+                            $slider.addClass(CLASS_NAME_DISABLED);
                         } else {
-                            $slider.removeClass('ngrs-disabled');
+                            $slider.removeClass(CLASS_NAME_DISABLED);
                         }
                     }
 
@@ -371,7 +374,7 @@
                                 down = true;
 
                                 // add down class
-                                $handle.addClass('ngrs-down');
+                                $handle.addClass(CLASS_NAME_DOWN);
 
                                 $slider.addClass('ngrs-focus ' + handleDownClass);
 
@@ -486,8 +489,8 @@
                                     down = false;
 
                                     // remove down and over class
-                                    $handle.removeClass('ngrs-down');
-                                    $handle.removeClass('ngrs-over');
+                                    $handle.removeClass(CLASS_NAME_DOWN);
+                                    $handle.removeClass(CLASS_NAME_OVER);
 
                                     // remove active class
                                     $slider.removeClass('ngrs-focus ' + handleDownClass);
@@ -496,10 +499,10 @@
                             }
 
                         }).on(overEvent, function () {
-                            $handle.addClass('ngrs-over');
+                            $handle.addClass(CLASS_NAME_OVER);
                         }).on(outEvent, function () {
                             if (!down) {
-                                $handle.removeClass('ngrs-over');
+                                $handle.removeClass(CLASS_NAME_OVER);
                             }
                         });
                     }
@@ -556,7 +559,41 @@
 
                 }
             };
-        }]);
+        }])
+        .directive('tzIonicRangeSlider', function($compile) {
+            return {
+                restrict : 'E',
+                replace: true,
+                transclude: true,
+                template : '',
+                link : function($scope, $element, $attrs) {
+
+                    var tpl = '<div class="item range ngrs-range _ionColor_">\
+                    <i class="icon ngrs-range-value ngrs-range-min-value">_prefix_{{minSelected}}_suffix_</i>\
+                    <div tz-range-slider min="minRange" max="maxRange" model-min="minSelected" model-max="maxSelected"></div>\
+                    <i class="icon ngrs-range-value ngrs-range-max-value">_prefix_{{maxSelected}}_suffix_</i>\
+                    </div>';
+
+                    var prefix   = $attrs.prefix || '',
+                    suffix   = $attrs.suffix || '',
+                    ionColor = ($attrs.ionColor)? 'range-'+$attrs.ionColor : '';
+
+                    if(typeof $attrs.title != undefined) {
+                        tpl = '<div class="item item-divider"><h2>'+$attrs.title+'</h2></div>' + tpl;
+                    }
+
+                    tpl = tpl.replace(/minSelected/g, $attrs.minSelected)
+                    .replace(/maxSelected/g, $attrs.maxSelected)
+                    .replace(/minRange/g, $attrs.minRange)
+                    .replace(/maxRange/g, $attrs.maxRange)
+                    .replace(/_ionColor_/, ionColor)
+                    .replace(/_prefix_/g, prefix+' ')
+                    .replace(/_suffix_/g, ' '+suffix);
+
+                    $element.replaceWith( $compile(tpl)($scope) );
+                }
+            }
+        });
 
     // requestAnimationFramePolyFill
     // http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/

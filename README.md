@@ -36,20 +36,45 @@ Example
 
 The following properties are present in the scope:
 
-    $scope.range = {
+    $scope.price_range = {
         min : 0,
         max : 100,
         minSelected : 0,
         maxSelected : 100
     }
+
+    $scope.year_range = {
+        minSelected : 1980,
+        maxSelected : 1990
+    }
     
 So we can include the directive in the HTML like this:
 
-    <div class="item range ngrs-range">
-        <i class="icon ngrs-range-value ngrs-range-min-value">R$ {{range.minSelected}}</i>
-        <div tz-range-slider min="range.min" max="range.max" model-min="range.minSelected" model-max="range.maxSelected"></div>
-        <i class="icon ngrs-range-value ngrs-range-max-value">R$ {{range.maxSelected}}</i>
+    <div class="item range ngrs-range range-dark">
+        <i class="icon ngrs-range-value ngrs-range-min-value">$ {{price_range.minSelected}}</i>
+        <div tz-range-slider min="price_range.min" max="price_range.max" model-min="price_range.minSelected" model-max="price_range.maxSelected"></div>
+        <i class="icon ngrs-range-value ngrs-range-max-value">$ {{price_range.maxSelected}}</i>
     </div>
+
+Or use tz-ionic-range-slider like this:
+
+    <tz-ionic-range-slider ion-color="dark" 
+                           title="Price"
+                           min-selected="price_range.minSelected"
+                           max-selected="price_range.maxSelected"
+                           min-range="price_range.min"
+                           max-range="price_range.max"
+                           prefix="$">
+    </tz-ionic-range-slider>
+
+    <tz-ionic-range-slider ion-color="assertive" 
+                           title="Year"
+                           min-selected="year_range.minSelected"
+                           max-selected="year_range.maxSelected"
+                           min-range="1900"
+                           max-range="1999"
+                           suffix="ad">
+    </tz-ionic-range-slider>
 
 Credits
 -------
