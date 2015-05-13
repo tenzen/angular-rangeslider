@@ -1,4 +1,4 @@
-angular-rangeslider
+tenzen-ionic-rangeslider
 ===================
 _Current version: tz-0.0.1
 
@@ -18,8 +18,8 @@ Download the files from Github or use Bower:
 
 Add the JS and CSS to your page:
 
-    <script src="bower_components/angular-rangeslider/angular.rangeSlider.js"></script>
-    <link rel="stylesheet" href="bower_components/angular-rangeslider/angular.rangeSlider.css">
+    <script src="bower_components/tenzen-ionic-rangeslider/angular.rangeSlider.js"></script>
+    <link rel="stylesheet" href="bower_components/tenzen-ionic-rangeslider/angular.rangeSlider.css">
 
 Add the `tenzen-ionic-rangeSlider` module as a dependency for your app: `angular.module('myApp', ['tenzen-ionic-rangeSlider']);`
 
@@ -27,7 +27,7 @@ Bootstrap is not required.
 
 If you use SCSS & Compass you can include the source SCSS directly into your project CSS if you add `bower_components` to your include path:
 
-    @import "angular-rangeslider/scss/rangeSlider"; // requires Compass
+    @import "tenzen-ionic-rangeslider/scss/rangeSlider"; // requires Compass
 
 Example
 ------------------
@@ -57,15 +57,12 @@ Credits
 This was originally forked from [Daniel Crisp's](https://github.com/danielcrisp) angular-rangeslider:
 https://github.com/danielcrisp/angular-rangeslider
 
-Which itself is a fork of [Léon Gersen's](http://refreshless.com/) noUiSlider:
-https://github.com/leongersen/noUiSlider
-
 Licence
 -------
 
 This code is released under the [MIT Licence](http://opensource.org/licenses/MIT)
 
-Copyright (c) 2013 Daniel Crisp
+Copyright (c) 2013 LUA.NET
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
