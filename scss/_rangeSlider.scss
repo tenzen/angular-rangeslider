@@ -27,6 +27,8 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 
+$light-royal:                     #9c92d9 !default;
+
 /*------------------------------------*\
     THE CSS
 \*------------------------------------*/
@@ -136,75 +138,25 @@ body.#{$ngrs-prefix}touching {
 /*------------------------------------*\
     SUPORT IONIC COLORS
 \*------------------------------------*/
-.#{$ngrs-prefix}range {
-	&.range-light {
-		.#{$ngrs-prefix}join {
-			background-color: $light;
-			@include background-image(linear-gradient(lighten($light, 15%), $light));
+
+@mixin tz-ionic-rangeslider-style($color-name, $color) {
+	.#{$ngrs-prefix}range {
+		&.range-#{$color-name} {
+			.#{$ngrs-prefix}join {
+				background-color: $color;
+				@include background-image(linear-gradient(lighten($color, 15%), $color));
+			}
 		}
 	}
 }
-.#{$ngrs-prefix}range {
-	&.range-stable {
-		.#{$ngrs-prefix}join {
-			background-color: $stable;
-			@include background-image(linear-gradient(lighten($stable, 15%), $stable));
-		}
-	}
-}
-.#{$ngrs-prefix}range {
-	&.range-positive {
-		.#{$ngrs-prefix}join {
-			background-color: $positive;
-			@include background-image(linear-gradient(lighten($positive, 15%), $positive));
-		}
-	}
-}
-.#{$ngrs-prefix}range {
-	&.range-calm {
-		.#{$ngrs-prefix}join {
-			background-color: $calm;
-			@include background-image(linear-gradient(lighten($calm, 15%), $calm));
-		}
-	}
-}
-.#{$ngrs-prefix}range {
-	&.range-balanced {
-		.#{$ngrs-prefix}join {
-			background-color: $balanced;
-			@include background-image(linear-gradient(lighten($balanced, 15%), $balanced));
-		}
-	}
-}
-.#{$ngrs-prefix}range {
-	&.range-energized {
-		.#{$ngrs-prefix}join {
-			background-color: $energized;
-			@include background-image(linear-gradient(lighten($energized, 15%), $energized));
-		}
-	}
-}
-.#{$ngrs-prefix}range {
-	&.range-assertive {
-		.#{$ngrs-prefix}join {
-			background-color: $assertive;
-			@include background-image(linear-gradient(lighten($assertive, 15%), $assertive));
-		}
-	}
-}
-.#{$ngrs-prefix}range {
-	&.range-royal {
-		.#{$ngrs-prefix}join {
-			background-color: $royal;
-			@include background-image(linear-gradient(lighten($royal, 15%), $royal));
-		}
-	}
-}
-.#{$ngrs-prefix}range {
-	&.range-dark {
-		.#{$ngrs-prefix}join {
-			background-color: $dark;
-			@include background-image(linear-gradient(lighten($dark, 15%), $dark));
-		}
-	}
-}
+
+@include tz-ionic-rangeslider-style('light', $light);
+@include tz-ionic-rangeslider-style('stable', $stable);
+@include tz-ionic-rangeslider-style('positive', $positive);
+@include tz-ionic-rangeslider-style('calm', $calm);
+@include tz-ionic-rangeslider-style('balanced', $balanced);
+@include tz-ionic-rangeslider-style('energized', $energized);
+@include tz-ionic-rangeslider-style('assertive', $assertive);
+@include tz-ionic-rangeslider-style('royal', $royal);
+@include tz-ionic-rangeslider-style('dark', $dark);
+@include tz-ionic-rangeslider-style('light-royal', $light-royal);
